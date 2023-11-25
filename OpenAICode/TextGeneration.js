@@ -3,7 +3,7 @@ import OpenAI from "openai";
 
 const generateAIText = async (userId, userPrompt, conversationId) => {
     try {
-        const openai = new OpenAI({ apiKey: "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"});
+        const openai = new OpenAI({ apiKey: "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" });
         const previousMessages = await Conversation.findOne({ conversationId: conversationId },{ 'messages._id': 0 }).lean();
         const messages = previousMessages?.messages || [];
         messages.push({
@@ -16,11 +16,14 @@ const generateAIText = async (userId, userPrompt, conversationId) => {
         });
         const generatedText = completion.choices[0].message.content;
         const generatedTextRole = completion.choices[0].message.role;
+        // Store the system-generated message in the messages array
         messages.push({
             role: generatedTextRole,
             content: generatedText,
         });
+        // Update the messages array in the conversation document
         await Conversation.updateOne({ conversationId: conversationId }, { messages: messages });
+        // Return the generated text as the result
         return generatedText;
     } catch (error) {
         console.error("An Error Occurred:", error);
