@@ -3,7 +3,7 @@ import OpenAI from "openai";
 
 const generateAIText = async (userId, userPrompt, conversationId) => {
     try {
-        const openai = new OpenAI({ apiKey: "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" });
+        const openai = new OpenAI({ apiKey: "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" });
         const previousMessages = await Conversation.findOne({ conversationId: conversationId },{ 'messages._id': 0 }).lean();
         const messages = previousMessages?.messages || [];
         messages.push({
